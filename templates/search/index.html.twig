@@ -1,0 +1,117 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block section %}
+
+    <div class="search-form-section text-center pt-5">
+        <div class="container">
+
+
+            <div class="search-form-wrapper mx-auto d-inline-block">
+                <form class="form-inline search-form">
+                    <input type="text" placeholder="Rechercher ..." name="q" value="{{ q }}"
+                           class="form-control search-input mr-2">
+                    <button type="submit" class="btn btn-gradient">Go</button>
+                </form><!--//search-form-->
+            </div><!--//mx-auto-->
+        </div><!--//container-->
+    </div><!--//search-form-wrapper-->
+
+
+    <section class="blog-list-section py-5">
+
+        <div class="container">
+            {% if filterContry or filterCity %}
+                <h5 class="logo">Filtrer par </h5>
+                <ul>
+                    {% if filterContry %}
+                        <li>
+                            <strong>Contry</strong> : {{ filterContry }}
+                        </li>
+                    {% endif %}
+                    {% if filterCity %}
+                        <li>
+                            <strong>City</strong> : {{ filterCity }}
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            <div class="row">
+
+                <div class="col-12 col-lg-3 mb-5" style="padding-top: 60px">
+
+                    <form id="contact-form">
+                        <input type="hidden" name="q" value="{{ q }}">
+                        {% if filters and filters|length > 0 %}
+                            {% for key, filter in filters %}
+
+                                <div class="mb-3">
+                                    <h4 class="logo"> {{ key }}</h4>
+                                    <select class="browser-default custom-select" name="{{ key }}">
+                                        <option value="">Sélectionner une valeur</option>
+                                        {% for facet in filter.buckets %}
+
+                                            <option value="{{ facet.key }}" {% if facet.key == filterCity or facet.key == filterContry %} selected {% endif %}>  {{ facet.key }}
+                                                ({{ facet.doc_count }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <hr>
+
+                            {% endfor %}
+                            <div class="form-group col-12">
+                                <button type="submit" class="btn btn-block btn-gradient py-2">Filtrer</button>
+                            </div>
+                        {% endif %}
+
+                    </form><!--//contact-form-->
+
+                </div><!--//col-->
+                <div class="col-12 col-lg-9">
+                    {% if results %}
+                        <div class="navigation">
+                            {{ knp_pagination_render(results) }}
+                        </div>
+
+                        <h5 class="text-center">{{ countOfResults }} Resultas trouvé(s) pour le terme <span
+                                    class="logo">"{{ q }}"</span></h5>
+                    {% endif %}
+                    <div class="row mb-4">
+                        {% for result in results %}
+
+
+                            <div class="col-12 col-lg-4 pt-5 mb-2 ">
+                                <div class="member shadow" style="background-color: white">
+                                    <div class="member-profile">
+                                        <img class="rounded-circle shadow-sm" src="assets/images/team/member-1.png"
+                                             alt="">
+                                    </div><!--//member-profile-->
+                                    <div class="member-info p-4 p-lg-5">
+
+                                        <div class="member-title"><strong>Company</strong> : {{ result.label }}</div>
+                                        <div class="member-title"><strong>City</strong> : {{ result.city }}</div>
+                                        <div class="member-title"><strong>Contry</strong> : {{ result.contry }}</div>
+                                    </div><!--//member-info-->
+                                </div><!--//member-profile-->
+                            </div><!--//col-->
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% if results %}
+                        <div class="navigation text-center">
+                            {{ knp_pagination_render(results) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+{% endblock %}

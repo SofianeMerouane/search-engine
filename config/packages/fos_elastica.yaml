@@ -1,0 +1,24 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
+fos_elastica:
+    clients:
+        default: { host: localhost, port: 9200 }
+    indexes:
+        app:
+
+            use_alias: true
+            types:
+                articles:
+
+                    properties:
+                        label: ~
+                        price: ~
+                        city: { type: keyword }
+                        contry: { type: keyword }
+
+                    persistence:
+                        driver: orm
+                        model: App\Entity\Product
+
+
+
+
